@@ -2107,19 +2107,19 @@ it.layer(Layer.mergeAll(NodeServices.layer, ServerSettingsModule.layerTest(), Te
         ),
       );
 
-      it.effect("includes Claude Fable 5 on supported Claude Code versions", () =>
+      it.effect("includes Claude Fable 5.1 on supported Claude Code versions", () =>
         Effect.gen(function* () {
           const status = yield* checkClaudeProviderStatus(
             defaultClaudeSettings,
             claudeCapabilities(),
           );
-          const fable5 = status.models.find((model) => model.slug === "claude-fable-5");
-          assert.strictEqual(fable5?.name, "Claude Fable 5");
+          const fable51 = status.models.find((model) => model.slug === "claude-fable-5-1");
+          assert.strictEqual(fable51?.name, "Claude Fable 5.1");
         }).pipe(
           Effect.provide(
             mockSpawnerLayer((args) => {
               const joined = args.join(" ");
-              if (joined === "--version") return { stdout: "2.1.169\n", stderr: "", code: 0 };
+              if (joined === "--version") return { stdout: "2.1.255\n", stderr: "", code: 0 };
               if (joined === "auth status")
                 return {
                   stdout: '{"loggedIn":true,"authMethod":"claude.ai"}\n',
@@ -2132,25 +2132,25 @@ it.layer(Layer.mergeAll(NodeServices.layer, ServerSettingsModule.layerTest(), Te
         ),
       );
 
-      it.effect("hides Claude Fable 5 on older Claude Code versions", () =>
+      it.effect("hides Claude Fable 5.1 on older Claude Code versions", () =>
         Effect.gen(function* () {
           const status = yield* checkClaudeProviderStatus(
             defaultClaudeSettings,
             claudeCapabilities(),
           );
           assert.strictEqual(
-            status.models.some((model) => model.slug === "claude-fable-5"),
+            status.models.some((model) => model.slug === "claude-fable-5-1"),
             false,
           );
           assert.strictEqual(
             status.message,
-            "Claude Code v2.1.168 is too old for Claude Fable 5. Upgrade to v2.1.169 or newer to access it.",
+            "Claude Code v2.1.254 is too old for Claude Fable 5.1. Upgrade to v2.1.255 or newer to access it.",
           );
         }).pipe(
           Effect.provide(
             mockSpawnerLayer((args) => {
               const joined = args.join(" ");
-              if (joined === "--version") return { stdout: "2.1.168\n", stderr: "", code: 0 };
+              if (joined === "--version") return { stdout: "2.1.254\n", stderr: "", code: 0 };
               if (joined === "auth status")
                 return {
                   stdout: '{"loggedIn":true,"authMethod":"claude.ai"}\n',
