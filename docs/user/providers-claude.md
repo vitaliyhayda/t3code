@@ -1,5 +1,8 @@
 # Claude
 
+Opus defaults to Claude Opus 5.5 on Claude Code 2.1.280 or newer. The model keeps high as the explicit default effort and 1M as the default context selection. Earlier Opus models remain available as legacy selections. This change does not rewrite saved conversations.
+
+
 This guide is for people who want to use more than one Claude setup in T3 Code. For Codex, see
 [Codex](./providers-codex.md). For first-time setup, see [Install T3 Code](./install.md).
 

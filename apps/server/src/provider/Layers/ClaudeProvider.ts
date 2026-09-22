@@ -51,6 +51,7 @@ const CLAUDE_PRESENTATION = {
   displayName: "Claude",
   showInteractionModeToggle: true,
 } as const;
+const MINIMUM_CLAUDE_OPUS_5_5_VERSION = "2.1.280";
 const MINIMUM_CLAUDE_OPUS_5_VERSION = "2.1.219";
 const MINIMUM_CLAUDE_FABLE_5_VERSION = "2.1.169";
 const MINIMUM_CLAUDE_OPUS_4_8_VERSION = "2.1.154";
@@ -88,6 +89,42 @@ const CLAUDE_MODEL_CATALOG: ReadonlyArray<ServerProviderModel> = [
             { value: "200k", label: "200k" },
             { value: "1m", label: "1M", isDefault: true },
           ],
+        }),
+      ],
+    }),
+  },
+  {
+    slug: "claude-opus-5-5",
+    name: "Claude Opus 5.5",
+    isCustom: false,
+    capabilities: createModelCapabilities({
+      optionDescriptors: [
+        buildSelectOptionDescriptor({
+          id: "effort",
+          label: "Reasoning",
+          options: [
+            { value: "low", label: "Low" },
+            { value: "medium", label: "Medium" },
+            { value: "high", label: "High", isDefault: true },
+            { value: "xhigh", label: "Extra High" },
+            { value: "max", label: "Max" },
+            {
+              value: "ultracode",
+              label: "Ultracode",
+              description: "xhigh effort plus multi-agent workflow orchestration",
+            },
+            { value: "ultrathink", label: "Ultrathink" },
+          ],
+          promptInjectedValues: ["ultrathink"],
+        }),
+        buildBooleanOptionDescriptor({
+          id: "fastMode",
+          label: "Fast Mode",
+        }),
+        buildSelectOptionDescriptor({
+          id: "contextWindow",
+          label: "Context Window",
+          options: [{ value: "1m", label: "1M", isDefault: true }],
         }),
       ],
     }),
@@ -345,6 +382,9 @@ function getBuiltInClaudeModelsForVersion(
   version: string | null | undefined,
 ): ReadonlyArray<ServerProviderModel> {
   return BUILT_IN_MODELS.filter((model) => {
+    if (model.slug === "claude-opus-5-5") {
+      return version ? compareSemverVersions(version, MINIMUM_CLAUDE_OPUS_5_5_VERSION) >= 0 : false;
+    }
     if (model.slug === "claude-opus-5") {
       return supportsClaudeOpus5(version);
     }
@@ -425,6 +465,7 @@ export function normalizeClaudeCliEffort(
   if (
     effort === "xhigh" &&
     model !== "claude-fable-5" &&
+    model !== "claude-opus-5-5" &&
     model !== "claude-opus-5" &&
     model !== "claude-opus-4-8" &&
     model !== "claude-sonnet-5"
