@@ -124,9 +124,7 @@ const CLAUDE_MODEL_CATALOG: ReadonlyArray<ServerProviderModel> = [
         buildSelectOptionDescriptor({
           id: "contextWindow",
           label: "Context Window",
-          options: [
-            { value: "1m", label: "1M", isDefault: true },
-          ],
+          options: [{ value: "1m", label: "1M", isDefault: true }],
         }),
       ],
     }),
