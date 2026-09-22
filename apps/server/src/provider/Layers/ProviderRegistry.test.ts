@@ -1826,7 +1826,7 @@ it.layer(Layer.mergeAll(NodeServices.layer, ServerSettingsModule.layerTest(), Te
         ),
       );
 
-      it.effect("includes Claude Opus 5 on supported Claude Code versions", () =>
+      it.effect("includes Claude Opus 5 and 5.5 on supported Claude Code versions", () =>
         Effect.gen(function* () {
           const status = yield* checkClaudeProviderStatus(
             defaultClaudeSettings,
@@ -1834,11 +1834,15 @@ it.layer(Layer.mergeAll(NodeServices.layer, ServerSettingsModule.layerTest(), Te
           );
           const opus5 = status.models.find((model) => model.slug === "claude-opus-5");
           assert.strictEqual(opus5?.name, "Claude Opus 5");
+          assert.strictEqual(
+            status.models.find((model) => model.slug === "claude-opus-5-5")?.name,
+            "Claude Opus 5.5",
+          );
         }).pipe(
           Effect.provide(
             mockSpawnerLayer((args) => {
               const joined = args.join(" ");
-              if (joined === "--version") return { stdout: "2.1.219\n", stderr: "", code: 0 };
+              if (joined === "--version") return { stdout: "2.1.280\n", stderr: "", code: 0 };
               if (joined === "auth status")
                 return {
                   stdout: '{"loggedIn":true,"authMethod":"claude.ai"}\n',
