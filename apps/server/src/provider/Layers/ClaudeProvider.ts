@@ -125,7 +125,6 @@ const CLAUDE_MODEL_CATALOG: ReadonlyArray<ServerProviderModel> = [
           id: "contextWindow",
           label: "Context Window",
           options: [
-            { value: "200k", label: "200k" },
             { value: "1m", label: "1M", isDefault: true },
           ],
         }),
